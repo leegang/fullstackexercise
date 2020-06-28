@@ -1,0 +1,4 @@
+Title  New note SPA
+
+Browser->Server: POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+Server --> Browser: application/json; charset=utf-8 {"message":"note created"}

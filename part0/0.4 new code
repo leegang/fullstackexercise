@@ -1,0 +1,16 @@
+title New note
+
+Browser->Server: Post https://fullstack-exampleapp.herokuapp.com/new_note
+Server --> Browser:text/html; charset=utf-8
+Browser->Server: GET  https://fullstack-exampleapp.herokuapp.com/notes
+Server --> Browser:text/html; charset=utf-8
+Browser -> Server: GET https://fullstack-exampleapp.herokuapp.com/main.css
+Server --> Browser:text/css; charset=UTF-8
+Browser -> Server: GET https://fullstack-exampleapp.herokuapp.com/main.js
+Server --> Browser:application/javascript; charset=UTF-8
+note over Browser:
+browser starts executing js-code
+that requests JSON data from server
+end note
+Browser -> Server: GET https://fullstack-exampleapp.herokuapp.com/data.json
+Server --> Browser: application/json; charset=utf-8
