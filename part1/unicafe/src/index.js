@@ -1,17 +1,109 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React, { useState } from "react";
+import ReactDOM from "react-dom";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const App = () => {
+  // save clicks of each button to own state
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+  const [all, setAll] = useState(0);
+  const [score, setScore] = useState(0);
+  // const [average, setAverage] = useState(0);
+  // const [positive, setPositive] = useState(0);
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+  // const setToAverage = () => {
+  //   console.log('score:',score);
+  //   console.log('all:',all);
+  //   const newAverage = score / all;
+  //   setAverage(newAverage);
+  // };
+
+  const addCount = () => {
+    const newAll = all + 1;
+    setAll(newAll);
+  };
+
+  const setToScore = (x) => {
+    const newScore = score + x;
+    setScore(newScore);
+  };
+
+  const toPercent = (x) =>{
+    const newX = x * 100;
+    return(String(newX) + "%");
+  }
+
+  // const setToPositive = () => {
+  //   const newPositive = toPercent(good / all);
+  //   setPositive(newPositive);
+  // };
+
+  const handleGood = () => {
+    const newGood = good + 1;
+    setGood(newGood);
+    addCount();
+    setToScore(1);
+    
+  };
+
+  const handleNeut = () => {
+    const newNeutral = neutral + 1;
+    setNeutral(newNeutral);
+    setToScore(0);
+    addCount();
+    
+  };
+
+  const handleBad = () => {
+    const newBad = bad + 1;
+    setBad(newBad);
+    addCount();
+    setToScore(-1);
+    
+  };
+
+  return (
+    <div>
+      <Headers />
+      <FeedButton onClick={handleGood} text="good" />
+      <FeedButton onClick={handleNeut} text="neutral" />
+      <FeedButton onClick={handleBad} text="bad" />
+      <h1>statics</h1>
+      <Static text="good" value={good} />
+      <Static text="neutral" value={neutral} />
+      <Static text="bad" value={bad} />
+      <Static text="all" value={all} />
+      <Static text="average" value={(score/all)} />
+      <Static text="positive" value={toPercent(good/all)} />
+    </div>
+  );
+};
+
+const Headers = () => {
+  return (
+    <>
+      <h1>give feedback</h1>
+    </>
+  );
+};
+
+const FeedButton = (props) => {
+  return (
+    <>
+      <button onClick={props.onClick}>{props.text} </button>
+    </>
+  );
+};
+
+const Static = (props) => {
+  return (
+    <>
+      <p>
+        {" "}
+        {props.text} {props.value}
+      </p>
+    </>
+  );
+};
+
+ReactDOM.render(<App />, document.getElementById("root"));
