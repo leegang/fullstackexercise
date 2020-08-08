@@ -99,12 +99,16 @@ const Statics = (props) => {
   if (props.all > 0) {
     return (
       <>
-        <Static text="good" value={props.good} />
-        <Static text="neutral" value={props.neutral} />
-        <Static text="bad" value={props.bad} />
-        <Static text="all" value={props.all} />
-        <Static text="average" value={props.average} />
-        <Static text="positive" value={props.positive} />
+        <table>
+          <tbody>
+            <Static text="good" value={props.good} />
+            <Static text="neutral" value={props.neutral} />
+            <Static text="bad" value={props.bad} />
+            <Static text="all" value={props.all} />
+            <Static text="average" value={props.average} />
+            <Static text="positive" value={props.positive} />
+          </tbody>
+        </table>
       </>
     );
   } else {
@@ -119,10 +123,10 @@ const Statics = (props) => {
 const Static = (props) => {
   return (
     <>
-      <p>
-        {" "}
-        {props.text} {props.value}
-      </p>
+      <tr>
+        <td> {props.text}</td>
+        <td> {props.value}</td>
+      </tr>
     </>
   );
 };
