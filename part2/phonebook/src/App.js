@@ -8,9 +8,11 @@ const App = () => {
 
   const handleAdd = (event) => {
     event.preventDefault()
+    if ( persons.name){
+      alert("{newName} is already added to the phonebook." )
+    };
     const newPerson = {name:newName};
     console.log('newPerson',newPerson);
-    
     var newPersons = [...persons];
     console.log('newPersons',newPersons);
     
