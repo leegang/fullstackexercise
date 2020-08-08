@@ -28,10 +28,10 @@ const App = () => {
     setScore(newScore);
   };
 
-  const toPercent = (x) =>{
+  const toPercent = (x) => {
     const newX = x * 100;
-    return(String(newX) + "%");
-  }
+    return String(newX) + "%";
+  };
 
   // const setToPositive = () => {
   //   const newPositive = toPercent(good / all);
@@ -43,7 +43,6 @@ const App = () => {
     setGood(newGood);
     addCount();
     setToScore(1);
-    
   };
 
   const handleNeut = () => {
@@ -51,7 +50,6 @@ const App = () => {
     setNeutral(newNeutral);
     setToScore(0);
     addCount();
-    
   };
 
   const handleBad = () => {
@@ -59,7 +57,6 @@ const App = () => {
     setBad(newBad);
     addCount();
     setToScore(-1);
-    
   };
 
   return (
@@ -69,12 +66,15 @@ const App = () => {
       <FeedButton onClick={handleNeut} text="neutral" />
       <FeedButton onClick={handleBad} text="bad" />
       <h1>statics</h1>
-      <Static text="good" value={good} />
-      <Static text="neutral" value={neutral} />
-      <Static text="bad" value={bad} />
-      <Static text="all" value={all} />
-      <Static text="average" value={(score/all)} />
-      <Static text="positive" value={toPercent(good/all)} />
+      <Statics
+        good={good}
+        bad={bad}
+        neutral={neutral}
+        all={all}
+        score={score}
+        average={score / all}
+        positive={toPercent(good / all)}
+      />
     </div>
   );
 };
@@ -93,6 +93,27 @@ const FeedButton = (props) => {
       <button onClick={props.onClick}>{props.text} </button>
     </>
   );
+};
+
+const Statics = (props) => {
+  if (props.all > 0) {
+    return (
+      <>
+        <Static text="good" value={props.good} />
+        <Static text="neutral" value={props.neutral} />
+        <Static text="bad" value={props.bad} />
+        <Static text="all" value={props.all} />
+        <Static text="average" value={props.average} />
+        <Static text="positive" value={props.positive} />
+      </>
+    );
+  } else {
+    return (
+      <>
+        <p>No feedback given.</p>
+      </>
+    );
+  }
 };
 
 const Static = (props) => {
