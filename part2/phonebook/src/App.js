@@ -3,22 +3,20 @@ import axios from "axios";
 
 
 const App = () => {
-  const [persons, setPersons] = useState(['']);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [showAll, setShowAll] = useState(true);
   const [filter, setFilter] = useState("");
-
-  useEffect(()=>{
+  
+  useEffect(() => {
     axios.get("http://localhost:3001/persons").then(
       response =>{
         console.log(response.data);
         setPersons(response.data);
         console.log('Persons',persons);
-        
-      }
-    )
-  });
+        // eslint-disable-next-line 
+      })},[]);
 
   const handleAdd = (event) => {
     event.preventDefault();
