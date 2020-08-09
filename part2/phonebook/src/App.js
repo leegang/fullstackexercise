@@ -1,16 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456" },
-    { name: "Ada Lovelace", number: "39-44-5323523" },
-    { name: "Dan Abramov", number: "12-43-234345" },
-    { name: "Mary Poppendieck", number: "39-23-6423122" },
-  ]);
+  const [persons, setPersons] = useState(['']);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [showAll, setShowAll] = useState(true);
   const [filter, setFilter] = useState("");
+
+  useEffect(()=>{
+    axios.get("http://localhost:3001/persons").then(
+      response =>{
+        console.log(response.data);
+        setPersons(response.data);
+        console.log('Persons',persons);
+        
+      }
+    )
+  });
 
   const handleAdd = (event) => {
     event.preventDefault();
@@ -50,7 +58,7 @@ const App = () => {
     setFilter("");
   };
 
-  var persoToShow = showAll
+  var personToShow = showAll
     ? persons
     : persons.filter(
         (p) => p.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1
@@ -66,7 +74,7 @@ const App = () => {
 
       <PersinForm   nameValue={newName} nameChange ={handleChangeName}  numberValue={newNumber}  numberChange={handleChangeNumber}  onClick={handleAdd}/>
       <h2>Numbers</h2>
-      <Persons  persoToShow={persoToShow} />
+      <Persons  personToShow={personToShow} />
     </div>
   );
 };
@@ -98,7 +106,7 @@ const PersinForm =(props) =>{
 
 const Persons =(props) =>{
 
- return (<>{props.persoToShow.map((person, id) => (
+ return (<>{props.personToShow.map((person, id) => (
     <p key={id}>
       {person.name} {person.number}{" "}
     </p>
