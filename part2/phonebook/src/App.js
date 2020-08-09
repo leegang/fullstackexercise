@@ -9,10 +9,8 @@ const App = () => {
   ]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
-  const [showAll,setShowAll] = useState(true);
-  const [filter,setFilter] = useState("");
-
-
+  const [showAll, setShowAll] = useState(true);
+  const [filter, setFilter] = useState("");
 
   const handleAdd = (event) => {
     event.preventDefault();
@@ -31,12 +29,13 @@ const App = () => {
       setPersons(newPersons);
       setNewName("");
       setNewNumber("");
-    };
+    }
   };
 
   const handleChangeName = (event) => {
     console.log(event.target.value);
     setNewName(event.target.value);
+    setFilter("");
   };
 
   const handleChangeFilter = (event) => {
@@ -48,40 +47,62 @@ const App = () => {
   const handleChangeNumber = (event) => {
     console.log(event.target.value);
     setNewNumber(event.target.value);
+    setFilter("");
   };
 
-  var persoToShow = showAll?persons:persons.filter(p=> p.name.toLowerCase().indexOf(filter.toLowerCase())!== -1 )
-
+  var persoToShow = showAll
+    ? persons
+    : persons.filter(
+        (p) => p.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1
+      );
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-          filter shown with: <input value={filter} onChange={handleChangeFilter} />
-        </div>
+
+      <Filter value={filter} onChange={handleChangeFilter} />
+
       <h2>Add a new</h2>
-      
-      <form>
-        <div>
-          name: <input value={newName} onChange={handleChangeName} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleChangeNumber} />
-        </div>
-        <div>
-          <button type="submit" onClick={handleAdd}>
-            add
-          </button>
-        </div>
-      </form>
+
+      <PersinForm   nameValue={newName} nameChange ={handleChangeName}  numberValue={newNumber}  numberChange={handleChangeNumber}  onClick={handleAdd}/>
       <h2>Numbers</h2>
-      {persoToShow.map((person, id) => (
-        <p key={id}>
-          {person.name} {person.number}{" "}
-        </p>
-      ))}
+      <Persons  persoToShow={persoToShow} />
     </div>
   );
 };
+
+const Filter = (props) => {
+  return (
+    <div>
+      filter shown with: <input value={props.value} onChange={props.onChange} />
+    </div>
+  );
+};
+
+
+const PersinForm =(props) =>{
+  return  (<><form>
+    <div>
+      name: <input value={props.nameValue} onChange={props.nameChange} />
+    </div>
+    <div>
+      number: <input value={props.numberValue} onChange={props.numberChange} />
+    </div>
+    <div>
+      <button type="submit" onClick={props.onClick}>
+        add
+      </button>
+    </div>
+  </form></>);
+};
+
+const Persons =(props) =>{
+
+ return (<>{props.persoToShow.map((person, id) => (
+    <p key={id}>
+      {person.name} {person.number}{" "}
+    </p>
+  ))}</>)
+}
 
 export default App;
