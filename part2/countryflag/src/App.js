@@ -13,10 +13,9 @@ const App = () => {
   };
 
   const handleShow = (x) => {
-    return () =>{ 
+    return () => {
       setFilter(x.name);
     };
-   
   };
 
   useEffect(() => {
@@ -55,13 +54,13 @@ const Results = (props) => {
   if (result.length === 1) {
     return (
       <>
-        <Countryinfo country={result[0]}  shown={true} />
+        <Countryinfo country={result[0]} />
       </>
     );
   } else if (result.length <= 10 && result.length > 1) {
     return (
       <>
-        <CountryList countries={result}  onClick={props.onClick}/>
+        <CountryList countries={result} onClick={props.onClick} />
       </>
     );
   }
@@ -74,27 +73,8 @@ const Results = (props) => {
   );
 };
 
-const Countryinfo = (props) => {
-return (
-    <>
-      <h2> {props.country.name}</h2>
-      <p>capital {props.country.capital}</p>
-      <p>population {props.country.population}</p>
-      <h3>languages</h3>
-      <ul>
-        {props.country.languages.map((l) => (
-          <li key={l.iso639_1}>{l.name}</li>
-        ))}
-      </ul>
-      <img src={props.country.flag} alt={props.country.name} width="100px" />
-    </>
-  );
-};
-
 const CountryList = (props) => {
   const countries = props.countries;
-
-  
 
   return (
     <>
@@ -106,6 +86,55 @@ const CountryList = (props) => {
       ))}
     </>
   );
+};
+
+const Countryinfo = (props) => {
+  const countryName = props.country.name;
+
+  return (
+    <>
+      <h2> {countryName}</h2>
+      <p>capital {props.country.capital}</p>
+      <p>population {props.country.population}</p>
+      <h3>languages</h3>
+      <ul>
+        {props.country.languages.map((l) => (
+          <li key={l.iso639_1}>{l.name}</li>
+        ))}
+      </ul>
+      <img src={props.country.flag} alt={props.country.name} width="100px" />
+      <Wether country={countryName} />
+    </>
+  );
+};
+
+const Wether = (props) => {
+  const [wetherData, setWetherData] = useState([]);
+  const [hasData, setHasData] = useState(false);
+  const apiKey = process.env.REACT_APP_API_KEY;
+  const queryUrl = String(
+    `http://api.weatherstack.com/current?access_key=${apiKey}&query=${props.country}`
+  );
+
+  console.log('queryUrl',queryUrl);
+  
+  useEffect(() => {
+    axios.get(queryUrl).then((response) => {
+      console.log("wetherData", response.data);
+      setWetherData(response.data);
+      setHasData(true);
+      console.log("wetherData", response.data);
+    });
+  }, [queryUrl]);
+
+  return hasData?(
+    <div>
+      <h2>Wether in {wetherData.location.name}</h2>
+      <p><b>Temperature:</b>{wetherData.current.temperature}</p>
+  <p><b>Wind:</b>{wetherData.current.wind_degree}mph direction {wetherData.current.wind_dir}</p>
+      <img alt="" src={wetherData.current.weather_icons[0]} />
+    </div>
+  ):null;
 };
 
 export default App;
