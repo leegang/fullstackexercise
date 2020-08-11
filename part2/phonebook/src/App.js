@@ -11,11 +11,17 @@ const App = () => {
   useEffect(() => {
     personService.getAll().then((response) => {
       console.log(response.data);
-      setPersons(response.data);
+
+      getPersons(response);
       console.log("Persons", persons);
       // eslint-disable-next-line
     });
   }, []);
+
+  const getPersons = (response) => {
+    const notNullPersons = response.data.filter((item) => item.name);
+    setPersons(notNullPersons);
+  };
 
   const handleAdd = (event) => {
     event.preventDefault();
@@ -56,24 +62,23 @@ const App = () => {
     setFilter("");
   };
 
-  var personToShow = showAll
-    ? persons
-    : persons.filter(
-        (p) => p.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1
-      );
-
   const handleDelete = (name, id) => {
     // e.preventDefault();
     return () => {
       if (window.confirm(`Delete ${name}?`)) {
         personService.remove(id).then((res) => {
-          console.log('res.data',res.data  );
-          
-          personService.getAll().then((res) => setPersons(res.data));
+          console.log("res.data", res.data);
+          getPersons(res);
         });
       }
     };
   };
+
+  let personToShow = showAll
+    ? persons
+    : persons.filter(
+        (p) => p.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1
+      );
 
   return (
     <div>
@@ -132,7 +137,9 @@ const Persons = (props) => {
         person.name ? (
           <p key={person.id}>
             {person.name} {person.number}{" "}
-            <button onClick={props.onClick(person.name, person.id)}>delete</button>
+            <button onClick={props.onClick(person.name, person.id)}>
+              delete
+            </button>
           </p>
         ) : null
       )}
