@@ -7,6 +7,9 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [showAll, setShowAll] = useState(true);
   const [filter, setFilter] = useState("");
+  const [message, setMessage] = useState(null);
+  const [errormessage, setErrorMessage] = useState(null)
+
 
   useEffect(() => {
     getPersons();
@@ -35,8 +38,9 @@ const App = () => {
       ) {
         personService.update(id, newPerson).then(res =>{
           getPersons();
-        }
-        );
+        }).catch(error=>{
+          setErrorMessage(`Note:Infomation of${newName} has already been removed from server`)
+        });
         
       }
     } else if (newName !== "") {
@@ -46,7 +50,7 @@ const App = () => {
       personService.create(newPerson).then((res) => {
         newPersons.push(res.data);
         setPersons(newPersons);
-        console.log("newPersons", newPersons);
+        setMessage(`Added ${newName}`)
       });
     }
     setNewName("");
@@ -92,6 +96,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} className="successmessgae" />
+      <Notification message={errormessage} className="errormessgae" />
 
       <Filter value={filter} onChange={handleChangeFilter} />
 
@@ -109,6 +115,18 @@ const App = () => {
     </div>
   );
 };
+
+const Notification = (props) => {
+  if (props.message === null) {
+    return null
+  }
+
+  return (
+    <div  className={props.className}>
+      {props.message}
+    </div>
+  )
+}
 
 const Filter = (props) => {
   return (
