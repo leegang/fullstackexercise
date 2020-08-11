@@ -9,18 +9,19 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
+    getPersons()
+  }, []);
+
+  const getPersons = () => {
     personService.getAll().then((response) => {
       console.log(response.data);
 
-      getPersons(response);
+      const notNullPersons = response.data.filter((item) => item.name);
+      setPersons(notNullPersons);
       console.log("Persons", persons);
       // eslint-disable-next-line
     });
-  }, []);
-
-  const getPersons = (response) => {
-    const notNullPersons = response.data.filter((item) => item.name);
-    setPersons(notNullPersons);
+    
   };
 
   const handleAdd = (event) => {
@@ -68,7 +69,7 @@ const App = () => {
       if (window.confirm(`Delete ${name}?`)) {
         personService.remove(id).then((res) => {
           console.log("res.data", res.data);
-          getPersons(res);
+          getPersons();
         });
       }
     };
