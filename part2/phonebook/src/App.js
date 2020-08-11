@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from "react";
 import personService from "./service/persons";
 
-
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [showAll, setShowAll] = useState(true);
   const [filter, setFilter] = useState("");
-  
+
   useEffect(() => {
-    personService.getAll().then(
-      response =>{
-        console.log(response.data);
-        setPersons(response.data);
-        console.log('Persons',persons);
-        // eslint-disable-next-line 
-      })},[]);
+    personService.getAll().then((response) => {
+      console.log(response.data);
+      setPersons(response.data);
+      console.log("Persons", persons);
+      // eslint-disable-next-line
+    });
+  }, []);
 
   const handleAdd = (event) => {
     event.preventDefault();
@@ -29,13 +28,14 @@ const App = () => {
       const newPerson = { name: newName, number: newNumber };
       console.log("newPerson", newPerson);
       const newPersons = [...persons];
-      personService.create(newPerson).then(res=> {
+      personService.create(newPerson).then((res) => {
         newPersons.push(res.data);
         setPersons(newPersons);
         console.log("newPersons", newPersons);
         setNewName("");
         setNewNumber("");
-      });}
+      });
+    }
   };
 
   const handleChangeName = (event) => {
@@ -62,6 +62,19 @@ const App = () => {
         (p) => p.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1
       );
 
+  const handleDelete = (name, id) => {
+    // e.preventDefault();
+    return () => {
+      if (window.confirm(`Delete ${name}?`)) {
+        personService.remove(id).then((res) => {
+          console.log('res.data',res.data  );
+          
+          personService.getAll().then((res) => setPersons(res.data));
+        });
+      }
+    };
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -70,9 +83,15 @@ const App = () => {
 
       <h2>Add a new</h2>
 
-      <PersinForm   nameValue={newName} nameChange ={handleChangeName}  numberValue={newNumber}  numberChange={handleChangeNumber}  onClick={handleAdd}/>
+      <PersinForm
+        nameValue={newName}
+        nameChange={handleChangeName}
+        numberValue={newNumber}
+        numberChange={handleChangeNumber}
+        onClick={handleAdd}
+      />
       <h2>Numbers</h2>
-      <Persons  personToShow={personToShow} />
+      <Persons personToShow={personToShow} onClick={handleDelete} />
     </div>
   );
 };
@@ -85,30 +104,40 @@ const Filter = (props) => {
   );
 };
 
-
-const PersinForm =(props) =>{
-  return  (<><form>
-    <div>
-      name: <input value={props.nameValue} onChange={props.nameChange} />
-    </div>
-    <div>
-      number: <input value={props.numberValue} onChange={props.numberChange} />
-    </div>
-    <div>
-      <button type="submit" onClick={props.onClick}>
-        add
-      </button>
-    </div>
-  </form></>);
+const PersinForm = (props) => {
+  return (
+    <>
+      <form>
+        <div>
+          name: <input value={props.nameValue} onChange={props.nameChange} />
+        </div>
+        <div>
+          number:{" "}
+          <input value={props.numberValue} onChange={props.numberChange} />
+        </div>
+        <div>
+          <button type="submit" onClick={props.onClick}>
+            add
+          </button>
+        </div>
+      </form>
+    </>
+  );
 };
 
-const Persons =(props) =>{
-
- return (<>{props.personToShow.map((person, id) => (
-    <p key={id}>
-      {person.name} {person.number}{" "}
-    </p>
-  ))}</>)
-}
+const Persons = (props) => {
+  return (
+    <>
+      {props.personToShow.map((person) =>
+        person.name ? (
+          <p key={person.id}>
+            {person.name} {person.number}{" "}
+            <button onClick={props.onClick(person.name, person.id)}>delete</button>
+          </p>
+        ) : null
+      )}
+    </>
+  );
+};
 
 export default App;
