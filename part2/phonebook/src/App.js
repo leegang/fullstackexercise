@@ -9,28 +9,36 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    getPersons()
+    getPersons();
   }, []);
 
   const getPersons = () => {
     personService.getAll().then((response) => {
-      console.log(response.data);
-
       const notNullPersons = response.data.filter((item) => item.name);
       setPersons(notNullPersons);
-      console.log("Persons", persons);
-      // eslint-disable-next-line
     });
-    
   };
 
   const handleAdd = (event) => {
     event.preventDefault();
-    const nameList = persons.map((p) => p.name);
-    console.log("nameL", nameList);
+    const b = persons.find(
+      (p) => p.name.toLowerCase() === newName.toLowerCase()
+    );
 
-    if (nameList.indexOf(newName) !== -1) {
-      alert(`${newName} is already added to the phonebook.`);
+    if (b) {
+      const newPerson = { name: newName, number: newNumber };
+      const id = b.id;
+      if (
+        window.confirm(
+          `${newName} is already added to the phonebook,replace the old number with a new one?`
+        )
+      ) {
+        personService.update(id, newPerson).then(res =>{
+          getPersons();
+        }
+        );
+        
+      }
     } else if (newName !== "") {
       const newPerson = { name: newName, number: newNumber };
       console.log("newPerson", newPerson);
@@ -39,10 +47,10 @@ const App = () => {
         newPersons.push(res.data);
         setPersons(newPersons);
         console.log("newPersons", newPersons);
-        setNewName("");
-        setNewNumber("");
       });
     }
+    setNewName("");
+    setNewNumber("");
   };
 
   const handleChangeName = (event) => {
@@ -97,7 +105,7 @@ const App = () => {
         onClick={handleAdd}
       />
       <h2>Numbers</h2>
-      <Persons personToShow={personToShow} onClick={handleDelete} />
+      <Persons personToShow={personToShow}  onClick={handleDelete} />
     </div>
   );
 };
