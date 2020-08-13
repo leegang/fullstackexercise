@@ -2,7 +2,7 @@ import express from "express"
 
 const app = express();
 
-const persons = [{
+let persons = [{
   id: 1,
   name: "HTML is easy",
   number: "2019-05-30T17:30:31.098Z",
@@ -35,6 +35,12 @@ app.get("/api/persons/:id",(req,res)=>{
   const person = persons.find(p => String(p.id) === req.params.id );
   if (person){ res.json(person);} else{res.sendStatus(404).end()}
 });
+
+app.delete("/api/persons/:id",(req,res)=>{
+  console.log('req.params.id',req.params.id);
+  persons = persons.filter(p => String(p.id) !== req.params.id );
+  res.sendStatus(204).end()}
+);
 
   const PORT = 3001;
   app.listen(PORT);
