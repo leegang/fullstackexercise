@@ -1,1 +1,11 @@
-delete http://127.0.0.1:3001/api/persons/3
+
+##### test the creat phonebook api
+POST   http://127.0.0.1:3001/api/persons/
+Content-Type: application/json
+
+{
+   "name":"leegang" ,
+    "number":"13819133442"
+}
+
+

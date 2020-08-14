@@ -1,6 +1,8 @@
 import express from "express"
 
 const app = express();
+app.use(express.json());
+
 
 let persons = [{
   id: 1,
@@ -41,6 +43,48 @@ app.delete("/api/persons/:id",(req,res)=>{
   persons = persons.filter(p => String(p.id) !== req.params.id );
   res.sendStatus(204).end()}
 );
+
+app.post("/api/persons",(req,res)=>{
+
+  console.log('req',req.body);
+  
+
+  const nameList = persons.map(p=>p.name);
+  const  getRandomInt = (min, max) =>{
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; //不含最大值，含最小值
+  };
+
+
+  console.log('name',nameList);
+  
+
+  if ((!req.body.name)||(!req.body.number) ) {
+    return res.status(400).json({ 
+      error: 'content missing' 
+    });
+  };
+
+  
+  if (nameList.indexOf(req.body.name.toLowerCase()) !== -1 ) {
+    return res.status(400).json({ 
+      error: 'name must be unique' 
+    });
+  };
+
+  const newPerson = {
+    id:getRandomInt(1000,90000),
+    name:req.body.name,
+    number:req.body.number
+  };
+
+  console.log('newPerson',newPerson);
+  
+  persons = persons.concat(newPerson);
+
+  res.json(newPerson);
+})
 
   const PORT = 3001;
   app.listen(PORT);
