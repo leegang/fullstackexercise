@@ -9,3 +9,7 @@ Content-Type: application/json
 }
 
 
+#### get all the persons 
+get  http://127.0.0.1:3001/api/persons/
+
+

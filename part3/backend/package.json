@@ -6,11 +6,12 @@
   "type": "module",
   "dependencies": {
     "express": "^4.17.1",
-    "http": "^0.0.1-security"
+    "http": "^0.0.1-security",
+    "morgan": "^1.10.0"
   },
   "scripts": {
     "start": "node index.js",
-    "dev":"nodemon index.js"
+    "dev": "nodemon index.js"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
