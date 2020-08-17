@@ -1,10 +1,14 @@
 import express from "express";
 import morgan from 'morgan';
+import cors from 'cors';
+
 
 const app = express();
+app.use(express.static('build'));
 app.use(express.json());
+app.use(cors());
 morgan.token("json", req => JSON.stringify(req.body));
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms:json'));
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :json'));
 
 
 
@@ -61,10 +65,6 @@ app.post("/api/persons",(req,res)=>{
     return Math.floor(Math.random() * (max - min)) + min; //不含最大值，含最小值
   };
 
-
-  console.log('name',nameList);
-  
-
   if ((!req.body.name)||(!req.body.number) ) {
     return res.status(400).json({ 
       error: 'content missing' 
@@ -84,13 +84,12 @@ app.post("/api/persons",(req,res)=>{
     number:req.body.number
   };
 
-  console.log('newPerson',newPerson);
   
   persons = persons.concat(newPerson);
 
   res.json(newPerson);
 })
 
-  const PORT = 3001;
+  const PORT = process.env.PORT||3001;
   app.listen(PORT);
   console.log(`Server running on port ${PORT}`);
